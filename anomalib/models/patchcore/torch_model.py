@@ -162,5 +162,6 @@ class PatchcoreModel(DynamicBufferModule, nn.Module):
             Tensor: Patch scores.
         """
         distances = torch.cdist(embedding, self.memory_bank, p=2.0)  # euclidean norm
+        #just comments
         patch_scores, _ = distances.topk(k=n_neighbors, largest=False, dim=1)
         return patch_scores
