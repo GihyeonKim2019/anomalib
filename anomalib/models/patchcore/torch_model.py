@@ -21,7 +21,7 @@ import torch
 import torch.nn.functional as F
 import torchvision
 from torch import Tensor, nn
-from scipy.spatial.distance import cdist
+from scipy.spatial import distance
 
 
 from anomalib.models.components import (
@@ -164,9 +164,9 @@ class PatchcoreModel(DynamicBufferModule, nn.Module):
         Returns:
             Tensor: Patch scores.
         """
-        distances = torch.cdist(embedding, self.memory_bank, p=2.0)  # euclidean norm
+        #distances = torch.cdist(embedding, self.memory_bank, p=2.0)  # euclidean norm
         #just comments
-        #distances = cdist(embedding, self.memory_bank, 'cosine')
+        distances = distance.euclidean(embedding, self.memory_bank, w = None)
 
         patch_scores, _ = distances.topk(k=n_neighbors, largest=False, dim=1)
         return patch_scores
