@@ -174,7 +174,7 @@ class PatchcoreModel(DynamicBufferModule, nn.Module):
         #memorybanknormed = torch.nn.functional.normalize(self.memory_bank, p = 2.0, dim = 1, eps = 1e-12, out = None)
         #distances = torch.from_numpy(distance.cdist(embedding, self.memory_bank, 'euclidean'))
         em = embedding.numpy()
-        bank = self.memory_bank()
+        bank = self.memory_bank.numpy()
 
 
         #newdistances = torch.cdist(embedding, self.memory_bank, p=2.0)
