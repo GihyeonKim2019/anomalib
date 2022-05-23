@@ -168,7 +168,7 @@ class PatchcoreModel(DynamicBufferModule, nn.Module):
         #just comments
         embeddingnormed = torch.nn.functional.normalize(embedding, p = 2.0, dim = 1, eps = 1e-12, out = None)
         memorybanknormed = torch.nn.functional.normalize(self.memory_bank, p = 2.0, dim = 1, eps = 1e-12, out = None)
-        distances = distance.cdist(embeddingnormed, memorybanknormed, 'cosine')
+        distances = distance.cdist(embedding, self.memory_bank, 'euclidean')
 
         patch_scores, _ = distances.topk(k=n_neighbors, largest=False, dim=1)
         return patch_scores
