@@ -166,7 +166,7 @@ class PatchcoreModel(DynamicBufferModule, nn.Module):
         """
         #distances = torch.cdist(embedding, self.memory_bank, p=2.0)  # euclidean norm
         #just comments
-        distances = cdist(embedding, self.memory_bank, 'mahalanobis')
+        distances = cdist(embedding, self.memory_bank, 'cosine')
 
         patch_scores, _ = distances.topk(k=n_neighbors, largest=False, dim=1)
         return patch_scores
