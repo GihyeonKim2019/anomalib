@@ -1,5 +1,6 @@
 """PyTorch model for the PatchCore model implementation."""
 
+
 # Copyright (C) 2020 Intel Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +16,13 @@
 # and limitations under the License.
 
 from typing import Dict, List, Optional, Tuple, Union
-
+import numpy as np
 import torch
 import torch.nn.functional as F
 import torchvision
 from torch import Tensor, nn
+from scipy.spatial.distance import cdist
+
 
 from anomalib.models.components import (
     DynamicBufferModule,
@@ -161,7 +164,9 @@ class PatchcoreModel(DynamicBufferModule, nn.Module):
         Returns:
             Tensor: Patch scores.
         """
-        distances = torch.cdist(embedding, self.memory_bank, p=2.0)  # euclidean norm
+        #distances = torch.cdist(embedding, self.memory_bank, p=2.0)  # euclidean norm
         #just comments
+        distances = cdist(embedding, self.memory_bank, 'mahalanobis')
+
         patch_scores, _ = distances.topk(k=n_neighbors, largest=False, dim=1)
         return patch_scores
