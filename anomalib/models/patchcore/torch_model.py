@@ -170,11 +170,11 @@ class PatchcoreModel(DynamicBufferModule, nn.Module):
 
 
 
-        #embeddingnormed = torch.nn.functional.normalize(embedding, p = 2.0, dim = 1, eps = 1e-12, out = None)
-        #memorybanknormed = torch.nn.functional.normalize(self.memory_bank, p = 2.0, dim = 1, eps = 1e-12, out = None)
+        embeddingnormed = torch.nn.functional.normalize(embedding, p = 2.0, dim = 1, eps = 1e-12, out = None)
+        memorybanknormed = torch.nn.functional.normalize(self.memory_bank, p = 2.0, dim = 1, eps = 1e-12, out = None)
         #distances = torch.from_numpy(distance.cdist(embedding, self.memory_bank, 'euclidean'))
-        em = embedding.cpu().numpy()
-        bank = self.memory_bank.cpu().numpy()
+        em = embeddingnormed.cpu().numpy()
+        bank = memorybanknormed.cpu().numpy()
 
 
         #newdistances = torch.cdist(embedding, self.memory_bank, p=2.0)
@@ -183,7 +183,7 @@ class PatchcoreModel(DynamicBufferModule, nn.Module):
         #if newdistances != distance:
         #  print("they are different!")
         
-        distances = torch.from_numpy(distance.cdist(em, bank, 'euclidean'))
+        distances = torch.from_numpy(distance.cdist(em, bank, 'cosine'))
 
         patch_scores, _ = distances.topk(k=n_neighbors, largest=False, dim=1)
         return patch_scores
