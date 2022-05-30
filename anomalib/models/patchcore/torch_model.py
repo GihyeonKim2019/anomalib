@@ -164,26 +164,40 @@ class PatchcoreModel(DynamicBufferModule, nn.Module):
         Returns:
             Tensor: Patch scores.
         """
+
+        #1: euclidean distance in original repo
         #distances = torch.cdist(embedding, self.memory_bank, p=2.0)  # euclidean norm
-        #just comments
 
-
-
-
-        embeddingnormed = torch.nn.functional.normalize(embedding, p = 2.0, dim = 1, eps = 1e-12, out = None)
-        memorybanknormed = torch.nn.functional.normalize(self.memory_bank, p = 2.0, dim = 1, eps = 1e-12, out = None)
+        #2: euclidean distance generated for experiments, using scipy (cpu computing)
+        #em = embedding.cpu().numpy()
+        #bank = self.memory_bank.cpy().numpy()
         #distances = torch.from_numpy(distance.cdist(embedding, self.memory_bank, 'euclidean'))
-        em = embeddingnormed.cpu().numpy()
-        bank = memorybanknormed.cpu().numpy()
+
+        #3: cosine similarity (difference) generated for experiments, using scipy (cpu computing)
+        #embeddingnormed = torch.nn.functional.normalize(embedding, p = 2.0, dim = 1, eps = 1e-12, out = None)
+        #memorybanknormed = torch.nn.functional.normalize(self.memory_bank, p = 2.0, dim = 1, eps = 1e-12, out = None)
+        #em = embeddingnormed.cpu().numpy()
+        #bank = memorybanknormed.cpu().numpy()
+        #distances = torch.from_numpy(distance.cdist(em, bank, 'cosine'))
+
+        #4: l1 distance (manhattan) generated for experiments, using scipy (cpu computing)
+        em = embedding.cpu().numpy()
+        bank = self.memory_bank.cpu().numpy()
+        distances = torch.from_numpy(distance.cdist(em, bank, 'cityblock'))
 
 
-        #newdistances = torch.cdist(embedding, self.memory_bank, p=2.0)
-        #if type(newdistances) != type(distance):
-        #  print("types are different!")
-        #if newdistances != distance:
-        #  print("they are different!")
+
+        #5: mahalanobis distance generated for experiments, using scipy (cpu computing)
+
+
+
         
-        distances = torch.from_numpy(distance.cdist(em, bank, 'cosine'))
+
+        
+
+
+        
+        
 
         patch_scores, _ = distances.topk(k=n_neighbors, largest=False, dim=1)
         return patch_scores
