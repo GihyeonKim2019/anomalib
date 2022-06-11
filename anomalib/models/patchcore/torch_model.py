@@ -170,7 +170,7 @@ class PatchcoreModel(DynamicBufferModule, nn.Module):
 
         #2: euclidean distance generated for experiments, using scipy (cpu computing)
         em = embedding.cpu().numpy()
-        bank = self.memory_bank.cpy().numpy()
+        bank = self.memory_bank.cpu().numpy()
         distances = torch.from_numpy(distance.cdist(em, bank, 'euclidean'))
 
         #3: cosine similarity (difference) generated for experiments, using scipy (cpu computing)
